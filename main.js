@@ -55,7 +55,7 @@ scene.add(spotLight3.target);
 //Add meshes
 const floor = new THREE.Mesh(
     new THREE.PlaneGeometry(8, 8),
-    new THREE.MeshPhongMaterial({ color: 0xEEEEEE, shininess: 10000 }),
+    new THREE.MeshPhongMaterial({ color: 0xFFFFFF, shininess: 10000 }),
 );
 floor.rotation.x = -Math.PI / 2;
 scene.add(floor);
@@ -82,12 +82,41 @@ loader.load('./assets/duck/Duck.gltf', (gltf) => {
     scene.add(duck2);
     duck2.rotation.y = -Math.PI / 2;
     duck2.position.set(1, 0, -1);
+
+    animate();
 });
 
 //Animate loop
+const radius = 2;
+const angIncreaseRate = 0.05;
+const lightIntensity = 10;
+const flickeringRate = 5;
+const danceIntensity = 0.2;
+const danceSpeed = 5;
+let ang = 0;
 function animate() {
     requestAnimationFrame(animate);
     controls.update();
+
+    spotLight1.position.x = radius * Math.cos(ang);
+    spotLight1.position.z = radius * Math.sin(ang);
+    spotLight1.intensity = (lightIntensity / 2) * (Math.cos(ang * flickeringRate) + 1);
+
+    spotLight2.position.x = radius * Math.cos(ang + 2);
+    spotLight2.position.z = radius * Math.sin(ang + 2);
+    spotLight2.intensity = (lightIntensity / 2) * (Math.cos(ang * flickeringRate) + 1);
+
+    spotLight3.position.x = radius * Math.cos(ang + 4);
+    spotLight3.position.z = radius * Math.sin(ang + 4);
+    spotLight3.intensity = (lightIntensity / 2) * (Math.cos(ang * flickeringRate) + 1);
+
+    duck1.position.y = (danceIntensity / 2) * (Math.sin(ang * danceSpeed) + 1);
+    duck1.rotation.z = (danceIntensity / 2) * Math.sin(ang * danceSpeed);
+
+    duck2.position.y = (danceIntensity / 2) * (Math.sin(ang * danceSpeed) + 1);
+    duck2.rotation.z = (danceIntensity / 2) * Math.sin(ang * danceSpeed);
+
+    ang += angIncreaseRate;
+
     renderer.render(scene, camera);
 }
-animate();
