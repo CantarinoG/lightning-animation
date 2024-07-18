@@ -93,6 +93,7 @@ const lightIntensity = 10;
 const flickeringRate = 5;
 const danceIntensity = 0.2;
 const danceSpeed = 5;
+let shouldDance = true;
 let ang = 0;
 function animate() {
     requestAnimationFrame(animate);
@@ -110,13 +111,58 @@ function animate() {
     spotLight3.position.z = radius * Math.sin(ang + 4);
     spotLight3.intensity = (lightIntensity / 2) * (Math.cos(ang * flickeringRate) + 1);
 
-    duck1.position.y = (danceIntensity / 2) * (Math.sin(ang * danceSpeed) + 1);
-    duck1.rotation.z = (danceIntensity / 2) * Math.sin(ang * danceSpeed);
+    if (shouldDance) {
+        duck1.position.y = (danceIntensity / 2) * (Math.sin(ang * danceSpeed) + 1);
+        duck1.rotation.z = (danceIntensity / 2) * Math.sin(ang * danceSpeed);
 
-    duck2.position.y = (danceIntensity / 2) * (Math.sin(ang * danceSpeed) + 1);
-    duck2.rotation.z = (danceIntensity / 2) * Math.sin(ang * danceSpeed);
+        duck2.position.y = (danceIntensity / 2) * (Math.sin(ang * danceSpeed) + 1);
+        duck2.rotation.z = (danceIntensity / 2) * Math.sin(ang * danceSpeed);
+    }
 
     ang += angIncreaseRate;
 
     renderer.render(scene, camera);
 }
+
+//DOM Manipulation
+const danceOption = document.getElementById("dance_option");
+danceOption.addEventListener("change", function () {
+    if (this.checked) {
+        shouldDance = true;
+    } else {
+        shouldDance = false;
+        duck1.position.set(-1, 0, 1);
+        duck2.position.set(1, 0, -1);
+    }
+});
+
+const ambientOption = document.getElementById("ambient_option");
+ambientOption.addEventListener("change", function () {
+    if (this.checked) {
+        scene.add(ambientLight);
+    } else {
+        scene.remove(ambientLight);
+    }
+});
+
+const directionalOption = document.getElementById("directional_option");
+directionalOption.addEventListener("change", function () {
+    if (this.checked) {
+        scene.add(directionalLight);
+    } else {
+        scene.remove(directionalLight);
+    }
+});
+
+const spotlightOption = document.getElementById("spotlight_option");
+spotlightOption.addEventListener("change", function () {
+    if (this.checked) {
+        scene.add(spotLight1);
+        scene.add(spotLight2);
+        scene.add(spotLight3);
+    } else {
+        scene.remove(spotLight1);
+        scene.remove(spotLight2);
+        scene.remove(spotLight3);
+    }
+});
